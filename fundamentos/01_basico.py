@@ -1,4 +1,74 @@
 #%%
+# Trabalando com variaveis e input do usuario
+valor1 = 10 # Usuário digita 10
+valor2 = 5 # Usuário digita 20
+soma_correta = valor1 + valor2
+print(soma_correta) # O resultado será 30.0
+
+#%%
+# Calculando o percentual de aumento de salario
+# 1. Obter os dados do usuário
+salario_atual = 1500
+percentual_aumento = 10
+
+# 3. Realizar os cálculos
+valor_do_aumento = salario_atual * (percentual_aumento / 100)
+novo_salario = salario_atual + valor_do_aumento
+
+# 4. Exibir os resultados de forma clara
+# O :.2f formata o número para exibir apenas 2 casas decimais
+print(f"\nSeu salário atual é: R$ {salario_atual:.2f}")
+print(f"O valor do seu aumento será de: R$ {valor_do_aumento:.2f}")
+print(f"Seu novo salário após o reajuste será de: R$ {novo_salario:.2f}")
+
+#%%
+# Trabalhando com medias no python
+# 1. Obter as três notas do aluno
+nota1 = 5
+nota2 = 7
+nota3 = 3
+
+# 3. Calcular a média
+media = (nota1 + nota2 + nota3) / 3
+
+# 4. Exibir o resultado
+print(f"\nAs notas digitadas foram: {nota1}, {nota2}, e {nota3}.")
+print(f"A média final do aluno é: {media:.1f}")
+
+
+#%%
+# Calculando a media
+notas = [7, 10, 6, 2, 8]
+media = sum(notas) / len(notas)
+print(media)
+
+#%%
+notas = [7, 10, 6, 2, 8]
+
+print("--- Verificando cada nota individualmente ---")
+
+# O loop 'for' vai passar por cada item da lista 'notas'
+for nota in notas:
+    # A condição verifica se a nota atual é maior que 7
+    if nota >= 7:
+        print(f"A nota {nota} foi APROVADA.")
+    else:
+        # Se a nota for 7 ou menor, ela não atende ao critério
+        print(f"A nota {nota} foi REPROVADA.")
+        
+#%%
+notas = [7, 10, 6, 2, 8]
+
+# 1. Calcula a média, como você já fez
+media = sum(notas) / len(notas)
+print(f"A média final do aluno é: {media:.2f}")
+
+# 2. Usa um if/else para verificar o resultado final
+if media >= 7:
+    print("Resultado Final: ALUNO APROVADO!")
+else:
+    print("Resultado Final: ALUNO REPROVADO.")
+#%%
 # Nível Básico (Foco em if/else e Listas)
 # Exercício 1: Classificação de Idade
 # Objetivo: Praticar a estrutura if, elif e else para tomar decisões baseadas em diferentes faixas de valores.
