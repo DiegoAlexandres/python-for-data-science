@@ -103,3 +103,4 @@ top_5_clientes = recebidos_completos.groupby('Cliente/Fornecedor')['Valor'].sum(
 
 print("\n--- Top 5 Clientes por Faturamento ---")
 print(top_5_clientes)
+
