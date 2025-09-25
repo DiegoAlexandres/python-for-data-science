@@ -10,6 +10,7 @@ produtos = {
     'Lápis': 'Papelaria'
 }
 
+#%%
 contagem_categorias = {}
 
 # .items() permite percorrer as chaves e os valores do dicionário ao mesmo tempo
@@ -41,7 +42,10 @@ lista_usuarios = [
     {'id': 3, 'nome': 'Carla', 'email': 'carla@exemplo.com'}
 ]
 
-nome_busca = 'Bruno'
+lista_usuarios
+
+#%%
+nome_busca = 'Diego'
 usuario_encontrado = None
 
 for usuario in lista_usuarios:
@@ -67,6 +71,7 @@ else:
 chaves = ['nome', 'idade', 'cidade']
 valores = ['Diego', 30, 'São Paulo']
 
+#%%
 dicionario_final = {}
 
 # A função zip() combina as duas listas, elemento por elemento
