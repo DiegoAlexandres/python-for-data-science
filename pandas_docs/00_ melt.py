@@ -58,3 +58,29 @@ for mes, media in media_mes.items():
 # Formatacao com um unico valor de saida
 preco = 59.9
 print(f'R$ {preco:.2f}')
+
+#%%
+
+# Observação Importante: Localização (Padrão Brasileiro)
+# A formatação .2f usa o ponto (.) como separador decimal, que é o padrão na programação e no sistema americano.
+
+# Se você precisar exibir o valor no formato brasileiro, com vírgula (,) para os decimais e ponto (.) para milhares, você precisará usar o módulo locale.
+
+# Veja como fazer:
+
+# locate
+import locale
+
+# Define a localização para o padrão brasileiro
+# 'pt_BR.UTF-8' é o mais comum para sistemas Linux/macOS
+# 'Portuguese_Brazil.1252' ou 'ptb' pode ser necessário no Windows
+try:
+    locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
+except locale.Error:
+    locale.setlocale(locale.LC_ALL, 'Portuguese_Brazil.1252')
+
+
+valor = 1234567.89
+
+# Usando a formatação de moeda do locale
+print(locale.currency(valor, grouping=True))
