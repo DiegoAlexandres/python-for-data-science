@@ -16,6 +16,11 @@ df.head()
 df = df.rename(columns={"ANOMES" : "DATA"})
 df.head()
 
+df.info()
+#%%
+df["DATA"] = df["DATA"].dt.strftime("%d/%m-%Y")
+df.info()
+
 #%%
 #######################################################-----2-----#########################################################
 
@@ -49,7 +54,9 @@ df.head()
 # 2. Usa .loc para selecionar as linhas onde a condição é verdadeira e muda o valor para 'Sim'
 df.loc[df['COD_FONTE_MAE'].isin(codigo_rpps), 'RPPS'] = 'Sim'
 
-df["RPPS"].unique()
+df.head()
+
+# df["RPPS"].unique()
 #%%
 #######################################################-----4-----#########################################################
 
@@ -93,7 +100,8 @@ df.head()
 #######################################################-----7-----#########################################################
 
 df['TOTAL_PAGO'] = df['PAGO'] + df['PAGO_EXERCICIO_ANTERIOR']
-df.head()
+# df.tail()
+df[df['TOTAL_PAGO'].notna()] # Faz um filtro e retorna os valores quando a coluna não esta vazia 
 
 #%%
 #######################################################-----8-----#########################################################
@@ -260,4 +268,4 @@ final_table.loc['Total'] = [total_2024, total_2025, total_var_pct, total_var_rs]
 final_table
 
 #%%
-final_table.to_excel("ddd..xlsx")
+final_table.to_excel("dddxx..xlsx")
