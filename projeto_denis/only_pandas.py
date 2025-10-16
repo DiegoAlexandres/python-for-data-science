@@ -95,6 +95,9 @@ df.head()
 df['TOTAL_PAGO'] = df['PAGO'] + df['PAGO_EXERCICIO_ANTERIOR']
 df.head()
 
+# df[df['TOTAL_PAGO'].notna()] # Faz um filtro e retorna os valores quando a coluna não esta vazia 
+# df.head()
+
 #%%
 #######################################################-----8-----#########################################################
 
