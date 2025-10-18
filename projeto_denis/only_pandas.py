@@ -88,16 +88,18 @@ df.head()
 #%%
 #######################################################-----6-----#########################################################
 
-regex_pattern = '^(32|46|99|45..66)|^45909266$|^45909263$|^45..64$|^45909264$|^45..63$'
+padroes = '^(32|46|99|45..66)|^45909266$|^45909263$|^45..64$|^45909264$|^45..63$'
 
+#%%
 # 1. Define 'Sim' como o valor padrão (caso "senão")
 df['PRIMARIO'] = 'Sim'
 
+#%%
 # 2. Usa .loc para encontrar as linhas que correspondem ao regex e muda o valor para 'Não'
-df.loc[df['COD_NATUREZA_ELEMENTO'].str.contains(regex_pattern, na=False), 'PRIMARIO'] = 'Não'
+df.loc[df['COD_NATUREZA_ELEMENTO'].str.contains(padroes, na=False), 'PRIMARIO'] = 'Não'
 
 df.head()
-
+df["PRIMARIO"].unique()
 #%%
 #######################################################-----7-----#########################################################
 
