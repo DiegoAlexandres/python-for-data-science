@@ -54,25 +54,33 @@ df["RPPS"].unique()
 #######################################################-----4-----#########################################################
 
 # 1. Define '4' como o valor padrão (caso "senão")
-df['COD_CATEGORIA'] = '4'
+df['COD_CATEGORIA'] = 4
 df.head()
 
 #%%
 # df = df.drop("Cod_Categoria", axis=1)
 # df.head()
 
+# codigo_categorias = [1, 2, 3]
+
+#%%
+df.drop("COD_CATEGORIA", axis=1, inplace=True)
+df.head()
 #%%
 # 2. Usa .loc para atualizar o valor para '3' onde a condição é atendida
-df.loc[df['COD_GRUPO'].isin(['1', '2', '3']), 'COD_CATEGORIA'] = '3'
+df.loc[df['COD_GRUPO'].isin([1, 2, 3]), 'COD_CATEGORIA'] = 3
 
-df.head()
+df.tail()
 #%%
 #######################################################-----5-----#########################################################
 
 colunas_concatenadas = ['COD_CATEGORIA', 'COD_GRUPO', 'COD_MODALIDADE', 'COD_ELEMENTO']
+
+#%%
 for col in colunas_concatenadas:
     df[col] = df[col].astype(str)
 
+#%%
 df['COD_NATUREZA_ELEMENTO'] = df[colunas_concatenadas].agg(''.join, axis=1)
 
 df.head()
