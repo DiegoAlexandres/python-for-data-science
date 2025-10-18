@@ -64,13 +64,14 @@ df.head()
 # codigo_categorias = [1, 2, 3]
 
 #%%
-df.drop("COD_CATEGORIA", axis=1, inplace=True)
-df.head()
+# df.drop("COD_CATEGORIA", axis=1, inplace=True)
+# df.head()
 #%%
 # 2. Usa .loc para atualizar o valor para '3' onde a condição é atendida
 df.loc[df['COD_GRUPO'].isin([1, 2, 3]), 'COD_CATEGORIA'] = 3
 
 df.tail()
+df["COD_CATEGORIA"].unique()
 #%%
 #######################################################-----5-----#########################################################
 
