@@ -108,46 +108,83 @@ df.head()
 
 # df[df['TOTAL_PAGO'].notna()] # Faz um filtro e retorna os valores quando a coluna não esta vazia 
 # df.head()
-
 #%%
 #######################################################-----8-----#########################################################
 
-filtered_df = df[(df['RPPS'] == 'Não') & (df['PRIMARIO'] == 'Sim')].copy()
-filtered_df['ano'] = filtered_df['DATA'].dt.year
-filtered_df['mes_num'] = filtered_df['DATA'].dt.month
-summary = filtered_df.groupby(['ano', 'mes_num'])['TOTAL_PAGO'].sum().reset_index()
-pivot_table = summary.pivot_table(index='mes_num', columns='ano', values='TOTAL_PAGO').fillna(0)
+filtro = df[(df['RPPS'] == 'Não') & (df['PRIMARIO'] == 'Sim')].copy()
+filtro
 
-if 2024 not in pivot_table.columns: pivot_table[2024] = 0
-if 2025 not in pivot_table.columns: pivot_table[2025] = 0
+#%%
+filtro['ano'] = filtro['DATA'].dt.year
+filtro
+
+#%%
+filtro['mes_num'] = filtro['DATA'].dt.month
+filtro
+
+#%%
+resumo = filtro.groupby(['ano', 'mes_num'])['TOTAL_PAGO'].sum().reset_index()
+resumo
+
+#%%
+tabela = resumo.pivot_table(index='mes_num', columns='ano', values='TOTAL_PAGO').fillna(0)
+tabela
+#%%
+# if 2024 not in tabela.columns: tabela[2024] = 0
+# if 2025 not in tabela.columns: tabela[2025] = 0
 
 # AJUSTE: Renomeando a coluna de variação para 'Var. R$'
-pivot_table['Var. R$'] = pivot_table[2025] - pivot_table[2024]
-pivot_table['Var. %'] = (pivot_table['Var. R$'] / pivot_table[2024].replace(0, float('nan'))) * 100
-pivot_table = pivot_table.fillna(0)
+tabela['Var. R$'] = tabela[2025] - tabela[2024]
+tabela
 
+#%%
+# tabela['Var. %'] = ((tabela['Var. R$'] / tabela[2024].replace(0, float('nan'))) * 100).round(2)
+tabela['Var. %'] = (tabela['Var. R$'] / tabela[2024] * 100).round(2)
+tabela
+
+#%%
+# tabela = tabela.fillna(0)
+
+#%%
 meses = {1: 'jan', 2: 'fev', 3: 'mar', 4: 'abr', 5: 'mai', 6: 'jun', 
          7: 'jul', 8: 'ago', 9: 'set', 10: 'out', 11: 'nov', 12: 'dez'}
-pivot_table.index = pivot_table.index.map(meses)
-pivot_table = pivot_table.rename_axis('Mês')
 
+#%%
+tabela.index = tabela.index.map(meses)
+tabela.index
+
+#%%
+tabela = tabela.rename_axis('Mês')
+tabela
+
+#%%
 # AJUSTE: Mudança para exibir todos os 12 meses, garantindo a ordem correta
-meses_todos = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez']
-final_table = pivot_table.reindex(meses_todos, fill_value=0)
-
+# meses_todos = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez']
+# tabela_final = tabela.reindex(meses_todos, fill_value=0)
+# tabela_final
+#%%
 # AJUSTE: Reordenando as colunas para corresponder ao exemplo
-final_table = final_table[[2024, 2025, 'Var. %', 'Var. R$']]
+tabela_final = tabela[[2024, 2025, 'Var. %', 'Var. R$']]
+tabela_final
 
+#%%
 # AJUSTE NOVO: Adicionando a linha de "Total"
-total_2024 = final_table[2024].sum()
-total_2025 = final_table[2025].sum()
-total_var_rs = final_table['Var. R$'].sum()
+total_2024 = tabela_final[2024].sum()
+
+#%%
+total_2025 = tabela_final[2025].sum()
+
+#%%
+total_variacao_rs = tabela_final['Var. R$'].sum()
+
+#%%
 # O percentual total é calculado sobre os totais, não somado
-total_var_pct = (total_var_rs / total_2024) * 100 if total_2024 != 0 else 0
+total_var_pct = ((total_variacao_rs / total_2024) * 100).round(2) 
 
-final_table.loc['Total'] = [total_2024, total_2025, total_var_pct, total_var_rs]
+#%%
+tabela_final.loc['Total'] = [total_2024, total_2025, total_var_pct, total_variacao_rs]
 
-final_table
+tabela_final
 
 # # Filtrar o DataFrame usando uma condição booleana
 # filtered_df = df[(df['RPPS'] == 'Não') & (df['Primário'] == 'Sim')].copy()
