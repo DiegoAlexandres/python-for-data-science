@@ -1,8 +1,15 @@
 #%%
 import pandas as pd
+pd.options.display.float_format = '{:.2f}'.format # Configuração Global do Pandas para float
 
 #%%
 df = pd.read_excel("../dados/base_denis.xlsx")
+df.head()
+
+#%%
+#######################################################-----0-----#########################################################
+
+df["COD_ELEMENTO"] = df["COD_ELEMENTO"].astype(str).str.zfill(2)
 df.head()
 
 #%%
@@ -34,6 +41,7 @@ df.loc[df['DES_GRUPO_DESPESA'].str.startswith('Amortizacao', na=False), 'COD_GRU
 df.loc[df['DES_GRUPO_DESPESA'].str.startswith('Reserva', na=False), 'COD_GRUPO'] = '9'
 
 df.head()
+
 #%%
 #######################################################-----3-----#########################################################
 
@@ -43,13 +51,12 @@ codigo_rpps = [1801261, 2801261, 1800262, 2800262, 1802202, 2802202]
 # 1. Define 'Não' como o valor padrão para a coluna inteira
 df['RPPS'] = 'Não'
 df.head()
-# df["RPPS"].unique()
 
 #%%
 # 2. Usa .loc para selecionar as linhas onde a condição é verdadeira e muda o valor para 'Sim'
 df.loc[df['COD_FONTE_MAE'].isin(codigo_rpps), 'RPPS'] = 'Sim'
-
 df["RPPS"].unique()
+
 #%%
 #######################################################-----4-----#########################################################
 
@@ -58,20 +65,12 @@ df['COD_CATEGORIA'] = 4
 df.head()
 
 #%%
-# df = df.drop("Cod_Categoria", axis=1)
-# df.head()
-
-# codigo_categorias = [1, 2, 3]
-
-#%%
-# df.drop("COD_CATEGORIA", axis=1, inplace=True)
-# df.head()
-#%%
 # 2. Usa .loc para atualizar o valor para '3' onde a condição é atendida
-df.loc[df['COD_GRUPO'].isin([1, 2, 3]), 'COD_CATEGORIA'] = 3
+df.loc[df['COD_GRUPO'].isin(["1", "2", "3"]), 'COD_CATEGORIA'] = 3
 
 df.tail()
 df["COD_CATEGORIA"].unique()
+
 #%%
 #######################################################-----5-----#########################################################
 
@@ -85,6 +84,7 @@ for col in colunas_concatenadas:
 df['COD_NATUREZA_ELEMENTO'] = df[colunas_concatenadas].agg(''.join, axis=1)
 
 df.head()
+
 #%%
 #######################################################-----6-----#########################################################
 
@@ -100,6 +100,7 @@ df.loc[df['COD_NATUREZA_ELEMENTO'].str.contains(padroes, na=False), 'PRIMARIO'] 
 
 df.head()
 df["PRIMARIO"].unique()
+
 #%%
 #######################################################-----7-----#########################################################
 
@@ -111,39 +112,34 @@ df.head()
 #%%
 #######################################################-----8-----#########################################################
 
-filtro = df[(df['RPPS'] == 'Não') & (df['PRIMARIO'] == 'Sim')].copy()
-filtro
+novo_df = df[(df['RPPS'] == 'Não') & (df['PRIMARIO'] == 'Sim')].copy()
+novo_df
 
 #%%
-filtro['ano'] = filtro['DATA'].dt.year
-filtro
+novo_df['ANO'] = novo_df['DATA'].dt.year
+novo_df
 
 #%%
-filtro['mes_num'] = filtro['DATA'].dt.month
-filtro
+novo_df['MES'] = novo_df['DATA'].dt.month
+novo_df
 
 #%%
-resumo = filtro.groupby(['ano', 'mes_num'])['TOTAL_PAGO'].sum().reset_index()
+resumo = novo_df.groupby(['ANO', 'MES'])['TOTAL_PAGO'].sum().reset_index()
 resumo
 
 #%%
-tabela = resumo.pivot_table(index='mes_num', columns='ano', values='TOTAL_PAGO').fillna(0)
+tabela = resumo.pivot_table(index='MES', columns='ANO', values='TOTAL_PAGO').fillna(0)
 tabela
-#%%
-# if 2024 not in tabela.columns: tabela[2024] = 0
-# if 2025 not in tabela.columns: tabela[2025] = 0
 
+#%%
 # AJUSTE: Renomeando a coluna de variação para 'Var. R$'
-tabela['Var. R$'] = tabela[2025] - tabela[2024]
+tabela['VAR. R$'] = tabela[2025] - tabela[2024]
 tabela
 
 #%%
 # tabela['Var. %'] = ((tabela['Var. R$'] / tabela[2024].replace(0, float('nan'))) * 100).round(2)
-tabela['Var. %'] = (tabela['Var. R$'] / tabela[2024] * 100).round(2)
+tabela['VAR. %'] = (tabela['VAR. R$'] / tabela[2024] * 100).round(2)
 tabela
-
-#%%
-# tabela = tabela.fillna(0)
 
 #%%
 meses = {1: 'jan', 2: 'fev', 3: 'mar', 4: 'abr', 5: 'mai', 6: 'jun', 
@@ -158,13 +154,8 @@ tabela = tabela.rename_axis('Mês')
 tabela
 
 #%%
-# AJUSTE: Mudança para exibir todos os 12 meses, garantindo a ordem correta
-# meses_todos = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez']
-# tabela_final = tabela.reindex(meses_todos, fill_value=0)
-# tabela_final
-#%%
 # AJUSTE: Reordenando as colunas para corresponder ao exemplo
-tabela_final = tabela[[2024, 2025, 'Var. %', 'Var. R$']]
+tabela_final = tabela[[2024, 2025, 'VAR. %', 'VAR. R$']]
 tabela_final
 
 #%%
@@ -175,7 +166,7 @@ total_2024 = tabela_final[2024].sum()
 total_2025 = tabela_final[2025].sum()
 
 #%%
-total_variacao_rs = tabela_final['Var. R$'].sum()
+total_variacao_rs = tabela_final['VAR. R$'].sum()
 
 #%%
 # O percentual total é calculado sobre os totais, não somado
@@ -185,6 +176,12 @@ total_var_pct = ((total_variacao_rs / total_2024) * 100).round(2)
 tabela_final.loc['Total'] = [total_2024, total_2025, total_var_pct, total_variacao_rs]
 
 tabela_final
+
+#%%
+tabela_final.columns.name = None
+tabela_final
+#%%
+tabela_final.to_excel("relatorio.xlsx")
 
 # # Filtrar o DataFrame usando uma condição booleana
 # filtered_df = df[(df['RPPS'] == 'Não') & (df['Primário'] == 'Sim')].copy()
