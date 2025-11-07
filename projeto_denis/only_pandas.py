@@ -12,6 +12,8 @@ df.head()
 df["COD_ELEMENTO"] = df["COD_ELEMENTO"].astype(str).str.zfill(2)
 df.head()
 
+
+
 #%%
 #######################################################-----1-----#########################################################
 
@@ -138,7 +140,8 @@ tabela
 
 #%%
 # tabela['Var. %'] = ((tabela['Var. R$'] / tabela[2024].replace(0, float('nan'))) * 100).round(2)
-tabela['VAR. %'] = (tabela['VAR. R$'] / tabela[2024] * 100).round(2)
+# tabela['VAR. %'] = (tabela['VAR. R$'] / tabela[2024] * 100).round(2)
+tabela['VAR. %'] = tabela['VAR. R$'] / tabela[2024] * 100
 tabela
 
 #%%
@@ -150,8 +153,8 @@ tabela.index = tabela.index.map(meses)
 tabela.index
 
 #%%
-tabela = tabela.rename_axis('Mês')
-tabela
+# tabela = tabela.rename_axis('Mês')
+# tabela
 
 #%%
 # AJUSTE: Reordenando as colunas para corresponder ao exemplo
@@ -170,18 +173,59 @@ total_variacao_rs = tabela_final['VAR. R$'].sum()
 
 #%%
 # O percentual total é calculado sobre os totais, não somado
-total_var_pct = ((total_variacao_rs / total_2024) * 100).round(2) 
+# total_var_pct = ((total_variacao_rs / total_2024) * 100).round(2) 
+total_var_pct = (total_variacao_rs / total_2024) * 100
 
 #%%
 tabela_final.loc['Total'] = [total_2024, total_2025, total_var_pct, total_variacao_rs]
-
 tabela_final
 
 #%%
-tabela_final.columns.name = None
-tabela_final
+# tabela_final.columns.name = None
+# tabela_final
+
 #%%
 tabela_final.to_excel("relatorio.xlsx")
+
+#%%
+###################################################-----EXTRA 1-----########################################################
+
+# 1. Começamos definindo um valor padrão para a nova coluna
+df['PORTE_DOTACAO'] = 'Sem Dotação'
+
+#%%
+# 2. Usamos .loc para aplicar cada condição. A ordem é importante para não sobrescrever.
+df.loc[(df['DOTACAO_INICIAL'] > 0) & (df['DOTACAO_INICIAL'] < 1_000_000), 'PORTE_DOTACAO'] = 'Baixo'
+df.loc[(df['DOTACAO_INICIAL'] >= 1_000_000) & (df['DOTACAO_INICIAL'] <= 50_000_000), 'PORTE_DOTACAO'] = 'Médio'
+df.loc[df['DOTACAO_INICIAL'] > 50_000_000, 'PORTE_DOTACAO'] = 'Alto'
+
+#%%
+# Exibe os resultados e a contagem de cada categoria
+df[['DOTACAO_INICIAL', 'PORTE_DOTACAO']].head()
+
+#%%
+df['PORTE_DOTACAO'].value_counts()
+
+
+#%%
+###################################################-----EXTRA 2-----########################################################
+
+# 1. Define a lista de códigos de interesse
+codigos_educacao = [3283, 3312]
+
+#%%
+# 2. Define o valor padrão 'Não'
+df['FLAG_EDUCACAO'] = 'Não'
+
+#%%
+# 3. Usa .isin() para encontrar os códigos na lista e marcar como 'Sim'
+df.loc[df['COD_PROGRAMA'].isin(codigos_educacao), 'FLAG_EDUCACAO'] = 'Sim'
+df
+
+#%%
+# Exibe a contagem de 'Sim' e 'Não' para verificar
+df['FLAG_EDUCACAO'].value_counts()
+
 
 # # Filtrar o DataFrame usando uma condição booleana
 # filtered_df = df[(df['RPPS'] == 'Não') & (df['Primário'] == 'Sim')].copy()
