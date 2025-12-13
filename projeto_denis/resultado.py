@@ -151,8 +151,23 @@ resultado_2024.style.format(
     thousands="."
 )
 
+
+
+
+
+
+
+
+
+
 #%%
 #===============================Criando um função=====================================
+receitas
+
+#%%
+despesas
+
+#%%
 fx_receitas_2024 = receitas[2024]
 fx_receitas_2024
 
@@ -169,6 +184,21 @@ fx_despesas_2025 = despesas[2025]
 fx_despesas_2025
 
 #%%
+resultado_df = pd.concat([fx_receitas_2024, fx_despesas_2024], axis=1)
+resultado_df
+
+#%%
+resultado_df["Resultado Primário"] = fx_receitas_2024 - fx_despesas_2024
+resultado_df
+
+#%%
+colunas_nomes = ["Receita Primária", "Despesas Primárias", "Resultado Primário"]
+resultado_df.columns = colunas_nomes
+
+#%%
+resultado_df
+
+#%%
 def resultado_primario(receitas_ano, despesas_ano):
 
     resultado_df = pd.concat([receitas_ano, despesas_ano], axis=1)
@@ -178,7 +208,7 @@ def resultado_primario(receitas_ano, despesas_ano):
     colunas_nomes = ["Receita Primária", "Despesas Primárias", "Resultado Primário"]
     resultado_df.columns = colunas_nomes
     
-    resultado_df = resultado_df.style.format(precision=2, decimal=",", thousands=".")
+    # resultado_df = resultado_df.style.format(precision=2, decimal=",", thousands=".")
     
     return resultado_df
 
@@ -192,7 +222,7 @@ fx_resultado_2025
 
 #%%
 #===============================Formação como função=====================================
-def formacao(df):
+def formatacao(df):
 
     return df.style.format(
         precision=2,
@@ -223,7 +253,26 @@ relatorio_resultado["Variação % YoY"] = (relatorio_resultado["Resultado Primá
 relatorio_resultado
 
 #%%
-formacao(relatorio_resultado)
+relatorio_resultado = relatorio_resultado[relatorio_resultado["Resultado Primário 2025"] !=0]
+relatorio_resultado
+
+#%%
+formatacao(relatorio_resultado)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #%%
 #===============================Separando Colunas=====================================
@@ -262,3 +311,4 @@ dados["Fonte_Mae Descricao"] = split_resultado.str.get(1)
 
 #%%
 dados
+
