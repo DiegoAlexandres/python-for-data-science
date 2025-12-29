@@ -128,6 +128,10 @@ df_escopo
 #Validando o dados do dia 01 ate dia 20
 df_escopo["DALANCAMENTO"].value_counts().sort_index() # Pordão ascending=True
 
+
+
+
+
 #%%
 #Calcular SALDO INICIAL (Acumulado do ano até o dia anterior, dia 19)
 saldo_inicial = df_escopo[df_escopo["DALANCAMENTO"] < dia_analise].groupby("FR")["VALANCAMENTO"].sum().reset_index(name="Saldo Inicial")
